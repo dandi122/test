@@ -40,6 +40,11 @@
         <input type="hidden" th:name="${ _csrf.parameterName }" 
 						       th:value="${ _csrf.token }"/>
       </form>
+    
+    	<br>
+    	<button id="btnDownload" class="btn btn-info">파일다운로드</button>
+    	<!-- 임시로 업로드한 파일명 저장 -->
+    	<input type="hidden" id="uploadFileName">
     </div>
   </div>
   <!-- /.login-box -->
@@ -52,6 +57,14 @@
   <script src="/dist/js/adminlte.min.js"></script>
 
   <script>
+  	//파일 다운로드
+  	$("#btnDownload").on('click', function (e) {
+  		// 현재 페이지를 특정 페이지로 이동
+  		//location.href="https://naver.com";
+  		//방금 업로드한 파일을 바로 다운받을 수 있게 업로드된 파일명 html 특정 요소에 저장해서 사용(임시적 방편)
+  		location.href="/file/download?filename=" + $("#uploadFileName").val();
+  	});
+  
     // 최적의 위치 중 하나 => body 태그 닫히기 직전
     // jquery => 요소 특정하는 방법 => $("css selector"), id로 찾을때는 #아이디값
     //1. 파일 업로드 버튼 특정(찾는 방법 css selector, xpath... )
@@ -73,6 +86,9 @@
             alert("파일 업로드 실패");
           } else if(res.code == 1) {
             alert("파일 업로드 성공" + res.message);
+            // 문서상에 존재하는 모든 요소들 중에 아이디가 uploadFileName 인 요소를 찾아서
+            // value 속성에 res.message를 세팅한다
+            $("#uploadFileName").val(res.message);
           }
         },
         error:function(err) {                   // 통신 실패하면 등록한 함수가 호출됨
