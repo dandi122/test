@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>파일 업로드</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+</head>
+
+<body class="hold-transition login-page">
+  <div class="login-box">
+    <div class="login-logo">
+      <a href="#"><b>파일</b>업로드</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+      <form id="fileForm">
+        
+        <div class="card-body login-card-body">
+          <input type="text" name="age" value="2000"><br>
+          <input type="text" name="name" value="홍길동"><br>
+          <input type="text" name="addr" value="세종시"><br>
+          <!-- 파일데이터 -->
+          <input type="file" name="uploadFile">
+        </div>
+        <!-- /.login-card-body -->
+        <div class="card-footer">
+          <button id="btnUpload" class="btn btn-success">파일업로드</button>
+        </div>
+        <input type="hidden" th:name="${ _csrf.parameterName }" 
+						       th:value="${ _csrf.token }"/>
+      </form>
+    </div>
+  </div>
+  <!-- /.login-box -->
+
+  <!-- jQuery -->
+  <script src="/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/dist/js/adminlte.min.js"></script>
+
+  <script>
+    // 최적의 위치 중 하나 => body 태그 닫히기 직전
+    // jquery => 요소 특정하는 방법 => $("css selector"), id로 찾을때는 #아이디값
+    //1. 파일 업로드 버튼 특정(찾는 방법 css selector, xpath... )
+    $("#btnUpload").on("click", function(e) {
+      e.preventDefault();  // 폼 전송 이벤트 무효화 처리
+      console.log("파일업로드");
+      // 서버측으로 데이터 전송, 폼데이터 + 파일 => 멀티파트 폼데이터, 방식 : ajax
+      $.ajax({
+        url:"/file/upload",                    // 서버측 주소
+        type:"post",                           // 전송방식
+        data:new FormData($("#fileForm")[0]),  // 보내고자 하는 데이터
+        enctype:"multipart/form-data",          // 데이터의 마임 타입 형식
+        processData:false,
+        contentType:false,
+        cache:false,
+        success:function(res) {                 // 통신성공하면 등록한 함수가 호출됨
+          console.log(res);
+          if(res.code== -1){
+            alert("파일 업로드 실패");
+          } else if(res.code == 1) {
+            alert("파일 업로드 성공" + res.message);
+          }
+        },
+        error:function(err) {                   // 통신 실패하면 등록한 함수가 호출됨
+          alert("오류:"+err);
+        }
+
+      });
+      return false;
+    });
+    //2. 
+
+
+  </script>  
+</body>
+
+</html>
