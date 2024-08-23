@@ -79,7 +79,7 @@ public class PostController {
 		this.postService.modify(post );
 		return "redirect:/post/detail/" + id;
 	}
-	@DeleteMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable("id") Integer id) {
 		Post post = this.postService.getOnePost(id);
 		this.postService.delete( post );

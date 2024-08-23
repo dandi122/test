@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.web.demo.dto.PostForm;
 import com.web.demo.entity.Post;
 import com.web.demo.exception.DataNotFoundException;
 import com.web.demo.repository.PostRepository;
@@ -35,6 +36,18 @@ public class PostService {
 		// 커스텀 예외 상황
 		throw new DataNotFoundException("post not found");
 	}
+	
+	
+	public PostForm getOnePostForm(Integer id) {
+		Optional<Post> oPost = this.postRepository.findById(id);
+		if(oPost.isPresent()) {
+			Post p = oPost.get();
+			return PostForm.builder().subject(p.getSubject()).content(p.getContent()).build();
+		}
+		// 커스텀 예외 상황
+		throw new DataNotFoundException("post not found");
+	}
+	
 	// Post 1개 디비에 등록 처리
 	public void create(String subject, String content) {
 		// Post 엔티티 생성
@@ -55,6 +68,12 @@ public class PostService {
 
 	public void delete(Post post) {
 		this.postRepository.delete(post);
+	}
+	
+	
+	public Post createEx(Post p) {
+		this.postRepository.save(p);
+		return p;		
 	}
 }
 

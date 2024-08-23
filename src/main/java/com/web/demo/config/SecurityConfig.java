@@ -37,13 +37,15 @@ public class SecurityConfig {
 			.authorizeHttpRequests( ( a ) -> a.requestMatchers
 				( new AntPathRequestMatcher("/h2-console/**") ).permitAll() )
 			.authorizeHttpRequests( ( a ) -> a.requestMatchers
+					( new AntPathRequestMatcher("/api/**") ).permitAll() )
+			.authorizeHttpRequests( ( a ) -> a.requestMatchers
 				( new AntPathRequestMatcher("/**") ).authenticated() )		
-			
+//			.csrf().disable()
 			.csrf( (b) -> 
-			b.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**")))
+			b.ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+			.ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")))
 			.headers( (c)-> c.addHeaderWriter(new XFrameOptionsHeaderWriter(
 					XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)) )
-			
 			.formLogin((formLogin) -> formLogin
 	                .loginPage("/user/login")
 	                .defaultSuccessUrl("/") 
